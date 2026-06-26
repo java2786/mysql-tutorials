@@ -1,0 +1,131 @@
+drop DATABASE if exists tutorial2;
+CREATE DATABASE tutorial2;
+
+USE tutorial2;
+
+CREATE TABLE Students (
+    id INT,
+    roll_number INT UNIQUE NOT NULL,
+    student_name VARCHAR(100) NOT NULL,
+    class VARCHAR(10) NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE Subjects (
+    id INT PRIMARY KEY,
+    subject_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Scores (
+    std_id INT,
+    sub_id INT,
+--    marks INT check(marks<=100),
+    marks INT,
+    CONSTRAINT max_marks_check CHECK (marks <= 100),
+    CONSTRAINT min_marks_check CHECK (marks >= 0),
+    primary key(std_id, sub_id),
+    foreign key(std_id) references Students(id),
+    foreign key(sub_id) references Subjects(id)
+);
+
+
+INSERT INTO Students VALUES
+(1,101,'Rahul Sharma','9A'),
+(2,102,'Priya Verma','9A'),
+(3,103,'Amit Patel','9B'),
+(4,104,'Neha Gupta','10A'),
+(5,105,'Karan Singh','10B'),
+(6,106,'Riya Shah','10B'),
+(7,107,'Mohit Jain','9A');
+
+INSERT INTO Subjects VALUES
+(1,'Mathematics'),
+(2,'Science'),
+(3,'English'),
+(4,'Social Studies'),
+(5,'Computer');
+
+-- insert into Scores(std_id, sub_id, marks) values(5, 9, 87);
+-- insert into Scores(std_id, sub_id, marks) values(15, 2, 87);
+
+insert into Scores(std_id, sub_id, marks) values(5, 1, 87);
+-- insert into Scores(std_id, sub_id, marks) values(5, 1, 89);
+update Scores set marks = 89 where std_id = 5 and sub_id = 1;
+
+-- insert into Scores(std_id, sub_id, marks) values(1, 3, 187);
+
+
+insert into Scores(std_id, sub_id, marks) values
+(1, 1, 87),
+(1, 2, 79),
+(1, 3, 81),
+(1, 4, 93),
+
+(2, 1, 87),
+(2, 2, 79),
+(2, 3, 81),
+
+(3, 3, 93),
+(3, 4, 92),
+
+(4, 1, 87),
+(4, 2, 79),
+(4, 4, 81),
+
+(5, 4, 93),
+(7, 1, 92);
+
+
+
+Basic SQL Queries (10 Questions)
+- Display all records from the Students table.
+- Display only student_name and class from the Students table.
+- Find details of the student whose roll number is 103.
+- Display all students belonging to class 9A.
+- Show all subject names from the Subjects table.
+- Find students whose names start with the letter 'R'.
+- Display students whose roll number is greater than 104.
+- Show all students sorted by student_name in ascending order.
+- Display all students sorted by roll_number in descending order.
+- Count the total number of students in the Students table.
+
+
+Aggregate Functions (10 Questions)
+- Find the total marks scored by all students.
+- Find the average marks of all students.
+- Find the highest marks scored in any subject.
+- Find the lowest marks scored in any subject.
+- Count the total number of score records available in the Scores table.
+- Find the total marks scored by student with std_id = 1.
+- Find the average marks obtained in the subject with sub_id = 2.
+- Find the highest marks obtained by student with std_id = 4.
+- Find the lowest marks obtained in the Computer subject (sub_id = 5).
+- Find the difference between maximum and minimum marks in the Scores table.
+
+
+GROUP BY Queries (10 Questions)
+- Display total marks scored by each student.
+- Display average marks scored by each student.
+- Display maximum marks obtained by each student.
+- Display minimum marks obtained by each student.
+- Display total marks for each subject.
+- Display average marks for each subject.
+- Count how many students have marks recorded for each subject.
+- Display the highest marks scored in each subject.
+- Display the lowest marks scored in each subject.
+- Show total marks class-wise using Students and Scores tables.
+
+
+
+SELECT
+  s.class,
+  SUM(sc.marks) AS total_marks
+FROM Students s, Scores sc
+WHERE s.id = sc.std_id
+GROUP BY s.class;
+
+
+
+select class, sum(marks)
+from Students join Scores on Students.id = Scores.std_id
+group by Students.class;
