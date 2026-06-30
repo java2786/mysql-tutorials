@@ -506,6 +506,22 @@ Find classes having more than one student.
 
 Find students whose total marks are greater than the average total marks of all students.
 
+
+```sql  
+SELECT std_id
+FROM Scores
+GROUP BY std_id
+HAVING SUM(marks) >
+(
+    SELECT AVG(total_marks)
+    FROM
+    (
+        SELECT SUM(marks) AS total_marks
+        FROM Scores
+        GROUP BY std_id
+    ) mytable
+);
+```
 ---
 
 ### Question 62
