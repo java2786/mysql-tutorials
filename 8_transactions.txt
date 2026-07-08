@@ -1,0 +1,83 @@
+drop DATABASE if exists transactiondb;
+CREATE DATABASE transactiondb;
+
+USE transactiondb;
+
+CREATE TABLE Students (
+    id INT,
+    roll_number INT UNIQUE NOT NULL,
+    student_name VARCHAR(100) NOT NULL,
+    class VARCHAR(10) NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE Subjects (
+    id INT PRIMARY KEY,
+    subject_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Scores (
+    std_id INT,
+    sub_id INT,
+--    marks INT check(marks<=100),
+    marks INT,
+    CONSTRAINT max_marks_check CHECK (marks <= 100),
+    CONSTRAINT min_marks_check CHECK (marks >= 0),
+    primary key(std_id, sub_id),
+    foreign key(std_id) references Students(id),
+    foreign key(sub_id) references Subjects(id)
+);
+
+
+INSERT INTO Students VALUES
+(1,101,'Rahul Sharma','9A'),
+(2,102,'Priya Verma','9A'),
+(3,103,'Amit Patel','9B'),
+(4,104,'Neha Gupta','10A'),
+(5,105,'Karan Singh','10B'),
+(6,106,'Riya Shah','10B'),
+(7,107,'Mohit Jain','9A');
+
+INSERT INTO Subjects VALUES
+(1,'Mathematics'),
+(2,'Science'),
+(3,'English'),
+(4,'Social Studies'),
+(5,'Computer');
+
+-- insert into Scores(std_id, sub_id, marks) values(5, 9, 87);
+-- insert into Scores(std_id, sub_id, marks) values(15, 2, 87);
+
+insert into Scores(std_id, sub_id, marks) values(5, 1, 87);
+-- insert into Scores(std_id, sub_id, marks) values(5, 1, 89);
+update Scores set marks = 89 where std_id = 5 and sub_id = 1;
+
+-- insert into Scores(std_id, sub_id, marks) values(1, 3, 187);
+
+
+start transaction;
+
+insert into Scores(std_id, sub_id, marks) values(1, 1, 87);
+insert into Scores(std_id, sub_id, marks) values(1, 2, 79);
+insert into Scores(std_id, sub_id, marks) values(1, 3, 81);
+insert into Scores(std_id, sub_id, marks) values(1, 4, 93);
+
+insert into Scores(std_id, sub_id, marks) values(2, 1, 87);
+insert into Scores(std_id, sub_id, marks) values(2, 2, 79);
+insert into Scores(std_id, sub_id, marks) values(2, 3, 81),
+
+insert into Scores(std_id, sub_id, marks) values(3, 3, 93);
+insert into Scores(std_id, sub_id, marks) values(3, 4, 92);
+insert into Scores(std_id, sub_id, marks) values(3, 4, 87),
+
+insert into Scores(std_id, sub_id, marks) values(4, 1, 87);
+insert into Scores(std_id, sub_id, marks) values(4, 2, 79);
+insert into Scores(std_id, sub_id, marks) values(4, 4, 81),
+
+insert into Scores(std_id, sub_id, marks) values(5, 4, 93);
+insert into Scores(std_id, sub_id, marks) values(7, 1, 92);
+
+rollback;
+
+select * from Scores;
+
