@@ -1,0 +1,13 @@
+row_number over () 
+
+select 
+    std_id, 
+    sub_id, 
+    marks,
+    row_number() over (partition by std_id order by sub_id desc) as SN,
+    rank() over (order by marks desc) as rank_value,
+    dense_rank() over (partition by std_id order by marks desc) as d_rank_value,
+    sum(marks) over (partition by std_id) as sum_value
+
+from Scores;
+
